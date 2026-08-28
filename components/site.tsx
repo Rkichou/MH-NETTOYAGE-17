@@ -45,18 +45,22 @@ function Hero() {
   const heroRef = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const imageY = useTransform(scrollYProgress, [0, 1], ["0%", reduce ? "0%" : "12%"]);
-  const copyY = useTransform(scrollYProgress, [0, 1], ["0%", reduce ? "0%" : "-10%"]);
+  const imageY = useTransform(scrollYProgress, [0, 1], ["0%", reduce ? "0%" : "8%"]);
+  const copyY = useTransform(scrollYProgress, [0, 1], ["0%", reduce ? "0%" : "-7%"]);
   return <section className="hero" id="accueil" ref={heroRef}>
-    <motion.div className="hero-media" style={{ y: imageY }}><Image src="/images/hero-detailing.png" alt="Detailing soigné d’une berline noire" fill priority sizes="100vw" /></motion.div>
-    <div className="hero-shade" />
+    <motion.div className="hero-media" style={{ y: imageY }}><Image src="/images/hero-v2.png" alt="Finition professionnelle d’une berline noire dans un studio automobile" fill priority sizes="100vw" /></motion.div>
     <motion.div className="hero-content" style={{ y: copyY }}>
-      <motion.p className="overline light-text" initial={reduce ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .2 }}>Nettoyage automobile · Charente-Maritime</motion.p>
-      <h1><motion.span initial={reduce ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: .8, ease: [.22, 1, .36, 1] }}>La précision</motion.span><motion.span className="gold-line" initial={reduce ? false : { y: "110%" }} animate={{ y: 0 }} transition={{ duration: .8, delay: .1, ease: [.22, 1, .36, 1] }}>dans chaque reflet.</motion.span></h1>
-      <motion.div className="hero-bottom" initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .65, duration: .7 }}><p>Un soin automobile exigeant, pensé pour redonner à votre véhicule une présence impeccable.</p><a className="primary-button" href="#rendez-vous">Réserver maintenant <ArrowRight size={18} /></a></motion.div>
+      <div className="hero-copy-v2">
+        <motion.p className="hero-label" initial={reduce ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .15 }}>Nettoyage automobile premium <span>·</span> Charente-Maritime</motion.p>
+        <motion.h1 initial={reduce ? false : { opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .8, delay: .1, ease: [.22, 1, .36, 1] }}>Le détail qui<br /><span>change tout.</span></motion.h1>
+        <motion.p className="hero-description" initial={reduce ? false : { opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .65, delay: .3 }}>Intérieur, extérieur ou soin complet. Votre véhicule retrouve une finition impeccable, réalisée avec méthode et exigence.</motion.p>
+        <motion.div className="hero-actions-v2" initial={reduce ? false : { opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .45 }}>
+          <a className="hero-primary" href="#rendez-vous">Prendre rendez-vous <ArrowRight size={18} /></a>
+          <a className="hero-secondary" href="#services">Voir les prestations <ArrowDown size={16} /></a>
+        </motion.div>
+        <motion.div className="hero-availability" initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .7 }}><i /> Sur rendez-vous · Secteur 17</motion.div>
+      </div>
     </motion.div>
-    <a className="scroll-cue" href="#studio"><span>Découvrir</span><ArrowDown size={16} /></a>
-    <div className="hero-index"><span>MH</span><span>17</span></div>
   </section>;
 }
 
