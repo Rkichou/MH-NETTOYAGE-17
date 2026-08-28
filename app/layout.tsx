@@ -1,0 +1,13 @@
+import type { Metadata } from "next";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://mh-nettoyage17.fr"),
+  title: "MH Nettoyage 17 | Nettoyage automobile en Charente-Maritime",
+  description: "Nettoyage intérieur, lavage extérieur et entretien esthétique automobile en Charente-Maritime. Demandez votre rendez-vous.",
+  openGraph: { title: "MH Nettoyage 17 | Propreté & services", description: "Le soin automobile jusque dans les moindres détails.", images: ["/images/hero-detailing.png"], locale: "fr_FR", type: "website" },
+};
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return <html lang="fr"><body>{children}</body></html>;
+}
