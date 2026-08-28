@@ -33,7 +33,7 @@ h1, h2, h3, p { letter-spacing: 0; }
 h2 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: clamp(3.2rem, 6.5vw, 6.8rem); font-weight: 400; line-height: .92; }
 h2 em { color: var(--gold-dark); font-weight: 400; }
 
-.header { position: fixed; z-index: 100; top: 0; left: 0; right: 0; height: 92px; display: grid; grid-template-columns: 180px 1fr auto; align-items: center; gap: 2rem; padding: 0 max(24px, calc((100vw - var(--max)) / 2)); color: white; transition: height .3s, background .3s, color .3s, border-color .3s; border-bottom: 1px solid rgba(255,255,255,.16); }
+.header { position: fixed; z-index: 100; top: 0; left: 0; right: 0; height: 92px; display: grid; grid-template-columns: 180px 1fr auto; align-items: center; gap: 2rem; padding: 0 max(24px, calc((100vw - var(--max)) / 2)); color: white; transition: height .3s, background .3s, color .3s, border-color .3s; }
 .header.is-scrolled { height: 76px; color: var(--ink); background: rgba(247,247,244,.96); border-color: var(--line); backdrop-filter: blur(16px); }
 .logo { width: fit-content; height: 72px; display: flex; align-items: center; }
 .logo img { border-radius: 5px; width: 112px; height: 70px; object-fit: contain; background: white; transition: width .3s; }
