@@ -2,7 +2,28 @@
 
 Site Next.js 16 / React / TypeScript : storytelling GSAP ScrollTrigger, scroll Lenis, micro-interactions Motion et demandes de rendez-vous via Resend.
 
-## Installation
+## Hero 3D
+
+La hero utilise Three.js charge dynamiquement et un modele CarConcept optimise
+(environ 1,6 Mo, CC BY 4.0). Credits complets : `public/models/CREDITS.md` et
+mentions legales du site. La voiture est une illustration, pas une realisation client.
+La boucle de 22 secondes alterne mousse, rincage, reflet et pause propre.
+Le bouton pause fige la sequence ; Motion Off / reduced-motion affiche la voiture
+propre immobile. Le rendu s'arrete hors ecran et lorsque l'onglet est masque.
+Une vraie photo prend le relais au chargement, en cas d'echec du modele ou de WebGL.
+Le ratio de pixels et le nombre de particules sont limites sur mobile.
+La CSP autorise `wasm-unsafe-eval` pour Meshopt, sans autoriser JavaScript
+`unsafe-eval` en production.
+
+Pour regenerer le modele depuis le GLB CarConcept original :
+`node scripts/prepare-car.mjs chemin/vers/CarConcept.glb`.
+La preparation retire textures et marques, remplace les materiaux et compresse
+la geometrie avec Meshopt ; elle ne modifie pas les photographies du client.
+
+Les tests `tests/hero-3d.spec.ts` couvrent le canvas, les phases de lavage,
+la pause, la parallaxe, la sortie du viewport et les modes de secours.
+
+## Demarrage
 
 ```powershell
 npm.cmd ci
@@ -50,4 +71,4 @@ Les captures sont dans `test-results/`. `TEST_URL` permet de tester un serveur e
 - `app/api/appointments/route.ts` : validation, anti-spam et Resend.
 - `next.config.ts` : CSP et autres headers de sécurité.
 
-Les scènes pinned sont réservées aux grands écrans. Motion Off supprime Lenis, pinning, parallaxe et tilt ; le contenu reste en flux normal. La préférence est mémorisée dans localStorage, avec reduced-motion respecté à l’ouverture. Le logo et les médias fournis sont conservés sans modification.
+Les scènes pinned sont réservées aux grands écrans. Motion Off supprime Lenis, pinning, parallaxe et tilt ; le contenu reste en flux normal. La préférence est mémorisée dans localStorage, avec reduced-motion respecté à l’ouverture. Le logo et les médias fournis sont conservés sans modification. Les photos réelles du dossier `public/images` remplacent les visuels génériques dans les sections du site ; les visuels génériques inutilisés restent dans le dossier pour référence.

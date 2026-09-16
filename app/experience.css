@@ -14,13 +14,14 @@ h2 { font-size: clamp(3rem, 5rem, 5rem); }
 .hero { height: auto; min-height: 0; background: #10100e; }
 .hero-media { inset: 0 0 auto; height: calc(100svh - 36px); min-height: 700px; }
 .hero-media img { object-position: center; }
-.hero-media::after { background: rgba(0,0,0,.18); }
+.hero-media::after { background: rgba(0,0,0,.5); }
 .hero-content { min-height: 700px; height: calc(100svh - 36px); padding-top: 155px; padding-bottom: 70px; }
 .hero-copy-v2 { width: 49%; max-width: 590px; }
 .hero-brand { font-size: 18px; font-weight: 700; margin: 0 0 26px; }
 .hero-brand span { color: var(--gold-light); }
 .hero-label { max-width: 400px; display: block; font-size: 11px; line-height: 1.6; }
 .hero h1 { font-size: clamp(3rem, 4.8rem, 4.8rem); line-height: .96; }
+.hero-copy-v2 { text-shadow: 0 2px 5px rgba(0,0,0,.7); }
 .hero-description { max-width: 430px; font-size: 16px; }
 .hero-actions-v2 { flex-wrap: wrap; }
 .hero-second { position: relative; padding: 95px max(24px, calc((100vw - var(--max)) / 2)); background: var(--ink); color: white; }
@@ -57,7 +58,7 @@ h2 { font-size: clamp(3rem, 5rem, 5rem); }
 .expansion { position: relative; background: var(--paper); overflow: hidden; }
 .expansion-heading { position: relative; display: flex; flex-direction: column; gap: 24px; padding: 70px 24px 35px; text-align: center; font-family: Arial, sans-serif; font-weight: 800; font-size: 54px; }
 .expansion-photo { position: relative; width: 100%; aspect-ratio: 16/9; }
-.expansion-photo img { object-fit: cover; }
+.expansion-photo img { object-fit: cover; object-position: center 55%; }
 .expansion-quote { padding: 60px max(24px, calc((100vw - var(--max)) / 2)); color: white; background: var(--ink); }
 .expansion-quote blockquote { margin: 0; font-family: Georgia, serif; font-size: 48px; line-height: 1.15; }
 .expansion-quote em { color: var(--gold-light); }
@@ -182,7 +183,7 @@ html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="
   .hero { display: flex; flex-direction: column; }
   .hero-media { position: relative; order: 2; height: 300px; min-height: 0; inset: auto; }
   .hero-media::after { background: transparent; }
-  .hero-media img { object-position: 68% center; }
+  .hero-media img { object-position: 59% center; }
   .hero-content { order: 1; padding: 114px 0 30px; min-height: 0; height: auto; }
   .hero-copy-v2 { width: 100%; }
   .hero h1 { max-width: none; font-size: clamp(2.6rem, 3.1rem, 3.1rem); }

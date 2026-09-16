@@ -15,7 +15,7 @@ export function ExpandingVisual() {
   const ref = useScrollScene(setup, true);
   return <section aria-label="La différence est dans les détails"><div className="expansion" ref={ref}>
     <h2 className="expansion-heading"><span>LA DIFFÉRENCE</span><span>EST DANS LES DÉTAILS.</span></h2>
-    <div className="expansion-photo"><Image src="/images/hero-detailing.png" alt="Passage minutieux d’une microfibre sur le capot" fill sizes="100vw" /></div>
+    <div className="expansion-photo"><Image src="/images/volkswagen-golf-lavage-mousse-vue-avant.jpeg" alt="Volkswagen Golf recouverte de mousse pendant le lavage" fill sizes="100vw" /></div>
     <div className="expansion-quote"><blockquote>Un véhicule propre se remarque.<br /><em>Un véhicule soigné se ressent.</em></blockquote><div className="quality-points"><span><Check /> Produits adaptés</span><span><Check /> Gestes maîtrisés</span><span><Check /> Contrôle final</span></div></div>
   </div></section>;
 }

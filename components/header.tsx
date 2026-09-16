@@ -17,7 +17,7 @@ export function Header() {
     return () => window.removeEventListener("scroll", update);
   }, []);
   return <><motion.div className="scroll-progress" style={{ scaleX: scrollYProgress }} /><header className={`header ${scrolled ? "is-scrolled" : ""}`}>
-    <a className="logo" href="#accueil" aria-label="MH Nettoyage 17, accueil"><Image src="/images/logo.jpg" alt="MH Nettoyage 17" width={150} height={150} priority /></a>
+    <a className="logo" href="#accueil" aria-label="MH Nettoyage 17, accueil"><Image src="/images/logo-mh-nettoyage-17.jpg" alt="MH Nettoyage 17" width={150} height={150} priority /></a>
     <nav className="nav" aria-label="Navigation principale">{links.map(([href, text]) => <a key={href} href={href}>{text}</a>)}</nav>
     <a className="nav-cta" href="#rendez-vous">Prendre rendez-vous <ArrowRight size={17} /></a>
     <button className="menu-button" aria-label="Ouvrir le menu" aria-expanded={open} onClick={() => setOpen(true)}><Menu /></button>

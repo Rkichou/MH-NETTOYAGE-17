@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { emptyAppointment, parisToday, validateAppointment } from "../lib/appointments";
+import { services } from "../lib/services";
 
 test("validation: professional service, impossible dates, malformed inputs", () => {
   const valid = { ...emptyAppointment, service: "Solutions professionnelles", vehicle: "Berline", date: parisToday(), time: "Matin", name: "Client Test", phone: "0612345678", email: "test@example.com", consent: true };
@@ -24,7 +25,7 @@ for (const [width, height] of [[1440,1000], [1024,768], [768,1024], [390,844], [
       await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
     }
     expect(await page.locator('a[href^="#"]').evaluateAll((links) => links.every((link) => !!document.getElementById(link.getAttribute("href")!.slice(1))))).toBe(true);
-    for (const img of await page.locator("main img").all()) {
+    for (const img of await page.locator("main img:visible").all()) {
       await img.scrollIntoViewIfNeeded();
       await expect.poll(() => img.evaluate((node: HTMLImageElement) => node.complete && node.naturalWidth > 0)).toBe(true);
     }
@@ -38,12 +39,7 @@ for (const [width, height] of [[1440,1000], [1024,768], [768,1024], [390,844], [
 test("desktop pinning reverses, motion switch restores normal flow", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/");
-  await expect(page.locator(".hero")).toHaveClass(/scene-pinned/);
-  await page.evaluate(() => window.scrollTo(0, 1400));
-  await expect.poll(() => page.locator(".hero-second").evaluate((e) => Number(getComputedStyle(e).opacity))).toBeGreaterThan(.9);
-  await page.screenshot({ path: "test-results/hero-second.png" });
-  await page.evaluate(() => window.scrollTo(0, 0));
-  await expect.poll(() => page.locator(".hero-copy-v2").evaluate((e) => Number(getComputedStyle(e).opacity))).toBeGreaterThan(.9);
+  await expect(page.locator(".hero-detailing")).toBeVisible();
   await page.locator(".expansion").scrollIntoViewIfNeeded();
   await page.evaluate(() => { const el = document.querySelector('.expansion')!; window.scrollBy(0, el.getBoundingClientRect().top + 1200); });
   await expect.poll(() => page.locator(".expansion-quote").evaluate((e) => Number(getComputedStyle(e).opacity))).toBeGreaterThan(.8);
@@ -51,17 +47,33 @@ test("desktop pinning reverses, motion switch restores normal flow", async ({ pa
   await page.getByRole("switch", { name: "Activer les animations" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-motion", "off");
   await expect(page.locator(".pin-spacer")).toHaveCount(0);
-  await expect(page.locator(".hero-second")).toBeVisible();
+  await expect(page.locator(".hero-detailing")).toBeAttached();
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-motion", "off");
   await page.getByRole("switch").click();
-  await expect(page.locator(".hero")).toHaveClass(/scene-pinned/);
+  await expect(page.locator(".expansion")).toHaveClass(/expansion-pinned/);
+});
+
+test("real photos match each service and replace generic media", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await expect(page.locator(".car-wash-fallback img")).toHaveAttribute("alt", /Volkswagen Golf/);
+  await page.locator("#services").scrollIntoViewIfNeeded();
+  for (const service of services) {
+    await page.getByRole("button", { name: new RegExp(service.name) }).first().click();
+    const preview = page.locator(".service-image img");
+    await expect(preview).toHaveAttribute("alt", service.imageAlt);
+    await expect.poll(() => preview.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+  }
+  await expect(page.locator(".stack-photo img")).toHaveCount(services.length);
+  expect(await page.locator("main img").evaluateAll((images) => images.every((image) => !image.getAttribute("src")?.includes("hero-detailing") && !image.getAttribute("src")?.includes("hero-v2")))).toBe(true);
 });
 
 test("desktop navigation reaches anchors across pinned scenes", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/");
-  await expect(page.locator(".hero")).toHaveClass(/scene-pinned/);
+  await expect(page.locator(".hero-detailing")).toBeVisible();
   for (const id of ["studio", "services", "methode", "contact", "rendez-vous", "accueil"]) {
     await page.locator(`header a[href="#${id}"]`).click();
     await expect.poll(() => page.locator(`#${id}`).evaluate((el) => Math.abs(el.getBoundingClientRect().top))).toBeLessThan(160);
