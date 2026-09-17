@@ -58,7 +58,7 @@ test("real photos match each service and replace generic media", async ({ page }
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  await expect(page.locator(".editorial-car img")).toHaveAttribute("alt", /Volkswagen Golf/);
+  await expect(page.locator(".editorial-car img")).toHaveAttribute("alt", /Porsche/);
   await page.locator("#services").scrollIntoViewIfNeeded();
   for (const service of services) {
     await page.getByRole("button", { name: new RegExp(service.name) }).first().click();

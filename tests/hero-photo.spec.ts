@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
-for (const [width, height] of [[1920,1080], [1440,1000], [1024,768], [768,1024], [540,900], [390,844], [360,800], [320,740]]) {
-  test(`editorial hero photo and layout ${width}`, async ({ page }) => {
+for (const [width, height] of [[2560,1440], [1920,1080], [1536,864], [1440,900], [1366,768], [1280,720], [1200,900], [1024,768], [901,900], [900,900], [820,1180], [768,1024], [601,900], [600,900], [540,900], [440,900], [430,932], [414,896], [390,844], [375,812], [360,800], [320,740], [844,390]]) {
+  test(`editorial hero photo and layout ${width}x${height}`, async ({ page }) => {
     await page.setViewportSize({ width, height });
     await page.emulateMedia({ reducedMotion: 'reduce' });
     const errors: string[] = [];
@@ -14,23 +14,34 @@ for (const [width, height] of [[1920,1080], [1440,1000], [1024,768], [768,1024],
     await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName('Redonnez tout son éclat à votre voiture.');
     await expect.poll(() => photo.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
     await expect(hero.locator('canvas')).toHaveCount(0);
-    await expect(hero.locator('.hero-primary')).toBeInViewport();
+    if (height >= 700) await expect(hero.locator('.hero-primary')).toBeInViewport();
     await expect(hero.locator('.hero-primary')).toHaveAttribute('href', '#rendez-vous');
     await expect(hero.locator('.editorial-secondary')).toHaveAttribute('href', '#services');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
     const bounds = await hero.boundingBox();
-    expect(bounds!.height).toBeLessThan(height);
+    if (height >= 700) expect(bounds!.height).toBeLessThan(height);
     const word = hero.locator('.editorial-word');
     expect(await word.evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
+    expect(await word.evaluate(el => el.getBoundingClientRect().height <= parseFloat(getComputedStyle(el).fontSize) * 1.1)).toBe(true);
     const imageBounds = await photo.boundingBox();
+    const stage = await hero.locator('.editorial-stage').boundingBox();
+    const frame = await hero.locator('.editorial-car').boundingBox();
+    // Visible alpha bounds of porche.png, excluding transparent padding.
+    const visibleCenterX = imageBounds!.x + imageBounds!.width * (27 + 1071) / 2 / 1130;
+    const visibleTop = imageBounds!.y + imageBounds!.height * 364 / 1392;
+    const visibleBottom = imageBounds!.y + imageBounds!.height * 955 / 1392;
+    expect(Math.abs(visibleCenterX - (stage!.x + stage!.width / 2))).toBeLessThan(2);
+    expect(visibleTop).toBeGreaterThanOrEqual(frame!.y);
+    expect(visibleBottom).toBeLessThanOrEqual(frame!.y + frame!.height);
+    expect(Math.abs((visibleTop + visibleBottom) / 2 - (frame!.y + frame!.height / 2))).toBeLessThan(2);
     const bottom = await hero.locator('.editorial-bottom').boundingBox();
     // The visible car ends before the action row, even allowing for transparent margins.
-    expect(imageBounds!.y + imageBounds!.height * .93).toBeLessThan(bottom!.y + 1);
+    expect(visibleBottom).toBeLessThan(bottom!.y + 1);
     if (width <= 900) {
       const ending = await hero.locator('.editorial-ending').boundingBox();
-      expect(imageBounds!.y + imageBounds!.height * .93).toBeLessThan(ending!.y + 1);
+      expect(visibleBottom).toBeLessThan(ending!.y + 1);
     }
-    await page.screenshot({ path: `test-results/hero-photo-${width}.png` });
+    await page.screenshot({ path: `test-results/hero-photo-${width}x${height}.png` });
     expect(errors).toEqual([]);
     expect(modelRequests).toEqual([]);
   });

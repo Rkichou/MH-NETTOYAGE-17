@@ -12,15 +12,13 @@ export function Hero() {
       </div>
       <div className="editorial-stage">
         <h1 id="hero-title" aria-label="Redonnez tout son éclat à votre voiture.">
-          <span className="editorial-lead" aria-hidden="true">Redonnez tout son</span>
           <span className="editorial-word" aria-hidden="true">Éclat.</span>
-          <span className="editorial-ending" aria-hidden="true">à votre voiture.</span>
         </h1>
         <p className="editorial-care">Le soin automobile,<br />jusque dans les détails.</p>
         <p className="editorial-services">Lavage intérieur<br />Lavage extérieur<br /><span>Finitions soignées</span></p>
         <div className="editorial-backword" aria-hidden="true">NETTOYAGE</div>
         <div className="editorial-car">
-          <Image src="/images/hero-golf-detouree.webp" alt="Volkswagen Golf blanche en vue trois-quarts, détourée à partir d’une photo de l’atelier." width={1536} height={1024} priority sizes="(max-width: 600px) 100vw, (max-width: 1100px) 68vw, 720px" />
+          <Image src="/images/hero-porchees.png" alt="Porsche blanche vue du dessus pendant un lavage à la main." width={1130} height={1392} priority sizes="(max-width: 600px) 100vw, (max-width: 1100px) 68vw, 720px" />
         </div>
       </div>
       <div className="editorial-bottom">

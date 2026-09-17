@@ -17,9 +17,10 @@ body:has(.hero-editorial) .header .nav-cta:hover { background: var(--ink); color
 .editorial-care { position: absolute; top: 355px; left: 0; margin: 0; font-size: 12px; color: #686861; line-height: 1.6; }
 .editorial-services { position: absolute; top: 322px; right: 0; width: 150px; padding-left: 18px; margin: 0; border-left: 2px solid var(--gold); font-size: 12px; line-height: 1.7; }
 .editorial-services span { color: #686861; }
-.editorial-backword { position: absolute; bottom: 5px; left: 0; right: 0; font-family: "Arial Black", Arial, sans-serif; font-size: 160px; font-weight: 900; font-style: italic; text-align: center; line-height: 1; color: #e6e6e3; user-select: none; }
-.editorial-car { position: absolute; width: 720px; max-width: 67%; left: 50%; top: 115px; transform: translateX(-50%); z-index: 2; }
-.editorial-car img { width: 100%; height: auto; display: block; filter: drop-shadow(0 24px 15px rgba(20,20,17,.13)); }
+.editorial-backword { position: absolute; bottom: 5px; left: 0; right: 0; font-family: "Arial Black", Arial, sans-serif; font-size: 160px; font-weight: 900; font-style: italic; text-align: center; line-height: 1; color: #10100e; user-select: none; }
+/* Frame the visible subject: the PNG has transparent rows above 340 and below 980. */
+.editorial-car { position: absolute; width: 720px; max-width: 67%; aspect-ratio: 1130 / 640; left: 50%; top: 62%; transform: translate(-50%, -50%); z-index: 2; }
+.editorial-car img { position: absolute; top: -25.125%; left: 1.42%; width: 100%; height: auto; display: block; }
 .editorial-bottom { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 30px; padding-top: 22px; border-top: 1px solid #e4e4df; }
 .editorial-description { margin: 0; font-size: 14px; line-height: 1.7; color: #575750; max-width: 380px; }
 .editorial-actions { display: flex; gap: 28px; align-items: center; }
@@ -41,7 +42,7 @@ html[data-motion="on"] .editorial-bottom { animation-delay: .25s; }
   .hero-editorial h1 .editorial-ending { top: 270px; font-size: 22px; }
   .editorial-care { top: 309px; }
   .editorial-services { top: 278px; width: 137px; }
-  .editorial-car { width: 600px; top: 75px; }
+  .editorial-car { width: 600px; top: 60%; }
   .editorial-backword { font-size: 130px; }
   .editorial-actions { gap: 20px; }
 }
@@ -52,11 +53,19 @@ html[data-motion="on"] .editorial-bottom { animation-delay: .25s; }
   .editorial-stage { height: 450px; }
   .hero-editorial h1 .editorial-word { font-size: 182px; }
   .hero-editorial h1 .editorial-ending { top: auto; bottom: 0; left: 0; right: 0; text-align: center; font-size: 25px; }
-  .editorial-car { top: 100px; max-width: 78%; width: 500px; }
+  .editorial-car { top: 60%; max-width: 78%; width: 500px; }
   .editorial-backword { bottom: 50px; font-size: 104px; }
   .editorial-care, .editorial-services { display: none; }
   .editorial-bottom { flex-direction: column; text-align: center; margin-top: 22px; gap: 18px; }
   .editorial-description { max-width: 480px; }
+}
+@media (min-width: 601px) and (max-width: 740px) {
+  .hero-editorial h1 .editorial-word { font-size: 140px; white-space: nowrap; }
+  .editorial-backword { font-size: 80px; }
+}
+@media (min-width: 901px) and (max-height: 760px) {
+  .hero.hero-editorial { padding-top: 104px; padding-bottom: 24px; }
+  .editorial-stage { height: 430px; }
 }
 @media (max-width: 600px) {
   .hero.hero-editorial { padding: 100px 20px 26px; }
@@ -68,7 +77,7 @@ html[data-motion="on"] .editorial-bottom { animation-delay: .25s; }
   .hero-editorial h1 .editorial-lead { top: 8px; font-size: 17px; }
   .hero-editorial h1 .editorial-word { top: 36px; font-size: 88px; white-space: nowrap; }
   .hero-editorial h1 .editorial-ending { font-size: 25px; }
-  .editorial-car { width: calc(100% + 24px); max-width: none; top: 99px; }
+  .editorial-car { width: calc(100% + 24px); max-width: none; top: 59%; }
   .editorial-backword { bottom: 44px; font-size: 52px; }
   .editorial-bottom { margin-top: 19px; padding-top: 19px; gap: 18px; }
   .editorial-description { font-size: 13px; max-width: 330px; }
