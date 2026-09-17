@@ -2,26 +2,23 @@
 
 Site Next.js 16 / React / TypeScript : storytelling GSAP ScrollTrigger, scroll Lenis, micro-interactions Motion et demandes de rendez-vous via Resend.
 
-## Hero 3D
+## Hero photographique
 
-La hero utilise Three.js charge dynamiquement et un modele CarConcept optimise
-(environ 1,6 Mo, CC BY 4.0). Credits complets : `public/models/CREDITS.md` et
-mentions legales du site. La voiture est une illustration, pas une realisation client.
-La boucle de 22 secondes alterne mousse, rincage, reflet et pause propre.
-Le bouton pause fige la sequence ; Motion Off / reduced-motion affiche la voiture
-propre immobile. Le rendu s'arrete hors ecran et lorsque l'onglet est masque.
-Une vraie photo prend le relais au chargement, en cas d'echec du modele ou de WebGL.
-Le ratio de pixels et le nombre de particules sont limites sur mobile.
-La CSP autorise `wasm-unsafe-eval` pour Meshopt, sans autoriser JavaScript
-`unsafe-eval` en production.
+La hero reprend la composition editoriale de la reference fournie : grand mot
+italique dore, voiture detouree au premier plan et typographie grise en arriere-plan.
+`components/hero.tsx` et `app/hero-editorial.css` isolent cette mise en page du reste
+du site. Aucun canvas, modele GLB ou module Three.js n'est charge par la hero.
+Les anciens fichiers 3D restent dans le depot mais ne sont plus importes par le site.
 
-Pour regenerer le modele depuis le GLB CarConcept original :
-`node scripts/prepare-car.mjs chemin/vers/CarConcept.glb`.
-La preparation retire textures et marques, remplace les materiaux et compresse
-la geometrie avec Meshopt ; elle ne modifie pas les photographies du client.
+`public/images/hero-golf-detouree.webp` (1536 x 1024, environ 184 Ko) est une
+adaptation retouchee par IA de la photo Golf fournie. Le fichier original est intact.
+Next/Image fournit les tailles adaptees et charge la hero en priorite.
+Voir `docs/hero-image.md` pour la provenance et le prompt de detourage.
 
-Les tests `tests/hero-3d.spec.ts` couvrent le canvas, les phases de lavage,
-la pause, la parallaxe, la sortie du viewport et les modes de secours.
+Les apparitions se terminent en moins de deux secondes, sans animation continue.
+Motion Off et prefers-reduced-motion desactivent animations et transitions.
+`tests/hero-photo.spec.ts` verifie huit formats, le cadrage, les boutons,
+les preferences de mouvement et l'absence de chargement de la scene 3D.
 
 ## Demarrage
 

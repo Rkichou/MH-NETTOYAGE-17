@@ -25,7 +25,7 @@ for (const [width, height] of [[1440,1000], [1024,768], [768,1024], [390,844], [
       await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
     }
     expect(await page.locator('a[href^="#"]').evaluateAll((links) => links.every((link) => !!document.getElementById(link.getAttribute("href")!.slice(1))))).toBe(true);
-    for (const img of await page.locator("main img:visible").all()) {
+    for (const img of await page.locator("main img").all()) {
       await img.scrollIntoViewIfNeeded();
       await expect.poll(() => img.evaluate((node: HTMLImageElement) => node.complete && node.naturalWidth > 0)).toBe(true);
     }
@@ -58,7 +58,7 @@ test("real photos match each service and replace generic media", async ({ page }
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  await expect(page.locator(".car-wash-fallback img")).toHaveAttribute("alt", /Volkswagen Golf/);
+  await expect(page.locator(".editorial-car img")).toHaveAttribute("alt", /Volkswagen Golf/);
   await page.locator("#services").scrollIntoViewIfNeeded();
   for (const service of services) {
     await page.getByRole("button", { name: new RegExp(service.name) }).first().click();
