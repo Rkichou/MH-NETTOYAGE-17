@@ -11,9 +11,9 @@ import { Reveal } from "./reveal";
 gsap.registerPlugin(ScrollTrigger);
 
 const comparisons = [
-  { id: "habitacle", label: "Habitacle Audi", caption: "Audi A5 · Habitacle côté passager", before: "/images/audi-a5-habitacle-avant-nettoyage.jpeg", after: "/images/audi-a5-siege-passager-apres-nettoyage.jpeg", position: "50% 55%" },
-  { id: "coffre", label: "Coffre BMW", caption: "BMW · Nettoyage du coffre", before: "/images/bmw-coffre-avant-nettoyage.jpeg", after: "/images/bmw-coffre-apres-nettoyage.jpeg", position: "50% 55%" },
   { id: "habitacle vue centrale", label: "Habitacle Audi", caption: "Audi A5 · Habitacle côté passager", before: "/images/audi-a5-habitacle-avant-nettoyage-vue-centrale.jpeg", after: "/images/audi-a5-habitacle-apres-nettoyage.jpeg", position: "50% 55%" },
+  { id: "Jante", label: "Jante BMW", caption: "BMW · Nettoyage de la jante", before: "/images/bmw-jante-avant-nettoyage.jpeg", after: "/images/bmw-jante-apres-nettoyage.png", position: "50% 55%" },
+  { id: "habitacle", label: "Habitacle Audi", caption: "Audi A5 · Habitacle côté passager", before: "/images/audi-a5-habitacle-avant-nettoyage.jpeg", after: "/images/audi-a5-siege-passager-apres-nettoyage.jpeg", position: "50% 55%" },
   { id: "habitacle vue droite", label: "Habitacle Audi", caption: "Audi A5 · Habitacle côté passager", before: "/images/audi-a5-habitacle-avant-nettoyage-vue-conducteur.jpeg", after: "/images/audi-a5-habitacle-apres-nettoyage-vue-conducteur.jpeg", position: "50% 55%" },
 
 ] as const;
