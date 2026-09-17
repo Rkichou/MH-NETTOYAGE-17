@@ -20,7 +20,22 @@ Motion Off et prefers-reduced-motion desactivent animations et transitions.
 `tests/hero-photo.spec.ts` verifie huit formats, le cadrage, les boutons,
 les preferences de mouvement et l'absence de chargement de la scene 3D.
 
-## Demarrage
+## Pourquoi nous choisir
+
+`components/why-choose-us.tsx` ajoute un comparateur apres la presentation de
+l'entreprise, accompagne de quatre benefices et d'un lien vers le rendez-vous.
+Les paires Audi (habitacle passager) et BMW (coffre) utilisent les photos fournies,
+sans retouche ni generation. Les angles differents sont signales sous les images.
+Les photographies ne sont pas alignees artificiellement.
+
+Le scroll deplace le separateur avec GSAP ; toute action sur le curseur ou les
+boutons donne ensuite la priorite au controle manuel. Le slider natif fonctionne
+au clavier et au toucher. Les onglets acceptent les fleches, Home et End.
+Motion Off / reduced-motion desactive l'animation automatique sans desactiver
+la comparaison. Les images sont optimisees par Next/Image et chargees a la demande.
+Les tests dedies sont dans `tests/why-choose-us.spec.ts`.
+
+## Lancement local
 
 ```powershell
 npm.cmd ci

@@ -4,6 +4,7 @@ import { Header } from "./header";
 import { Hero } from "./hero";
 import { Marquee } from "./marquee";
 import { Studio } from "./studio";
+import { WhyChooseUs } from "./why-choose-us";
 import { Services } from "./services";
 import { Method } from "./method";
 import { ExpandingVisual } from "./expanding-visual";
@@ -13,5 +14,5 @@ import { AppointmentForm } from "./appointment-form";
 import { Footer, MobileBookingLink } from "./footer";
 
 export function Site() {
-  return <MotionProvider><a className="skip-link" href="#main">Aller au contenu</a><Header /><main id="main"><Hero /><Marquee /><Studio /><Services /><Method /><ExpandingVisual /><DetailSpotlight /><StickyServices /><AppointmentForm /></main><Footer /><MobileBookingLink /></MotionProvider>;
+  return <MotionProvider><a className="skip-link" href="#main">Aller au contenu</a><Header /><main id="main"><Hero /><Marquee /><Studio /><WhyChooseUs /><Services /><Method /><ExpandingVisual /><DetailSpotlight /><StickyServices /><AppointmentForm /></main><Footer /><MobileBookingLink /></MotionProvider>;
 }
