@@ -1,5 +1,22 @@
 import { expect, test } from "@playwright/test";
 
+test('gallery hydrates consistently on initial load and reload', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'error' && /hydrat|server rendered|server-rendered|didn.t match|Minified React error #(418|419|421|422|423|425)/i.test(message.text())) errors.push(message.text());
+  });
+  page.on('pageerror', error => errors.push(error.message));
+  for (const reload of [false, true]) {
+    if (reload) await page.reload(); else await page.goto('/');
+    const gallery = page.locator('#galerie');
+    await expect(gallery.locator('.gallery-photo').first()).toHaveAttribute('data-photo-index', '0');
+    await expect(gallery.locator('.gallery-photo img').first()).toHaveAttribute('src', /volkswagen-golf-apres-lavage-vue-avant/);
+    await gallery.getByRole('button', { name: 'Finitions', exact: true }).click();
+    await expect(gallery.locator('.gallery-photo')).toHaveCount(2);
+    expect(errors).toEqual([]);
+  }
+});
+
 for (const [width, height] of [[1920,1080], [1440,1000], [1024,768], [768,1024], [390,844], [320,740], [844,390]]) {
   test(`gallery layout ${width}x${height}`, async ({ page }) => {
     await page.setViewportSize({ width, height });
