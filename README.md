@@ -35,6 +35,20 @@ Motion Off / reduced-motion desactive l'animation automatique sans desactiver
 la comparaison. Les images sont optimisees par Next/Image et chargees a la demande.
 Les tests dedies sont dans `tests/why-choose-us.spec.ts`.
 
+## Galerie
+
+`components/gallery.tsx` et `app/gallery.css` ajoutent un carrousel en eventail
+apres les services. Les huit photos proviennent de `public/images`, sans retouche.
+Les categories filtrent la selection ; les fleches, les points et le balayage
+tactile permettent de naviguer. La photo centrale ouvre une visionneuse native
+avec navigation au clavier, fermeture Echap et retour du focus.
+
+Next/Image sert des images redimensionnees et chargees a la demande. Le reveal
+GSAP est nettoye au changement de categorie ; Motion Off et reduced-motion
+suppriment le reveal, les transitions et le zoom au survol. Aucun defilement
+automatique ni blocage du scroll mobile. `tests/gallery.spec.ts` couvre sept
+formats, les filtres, le clavier, la visionneuse, le toucher et les animations.
+
 ## Lancement local
 
 ```powershell
