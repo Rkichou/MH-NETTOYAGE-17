@@ -60,11 +60,13 @@ Le site est disponible sur `http://localhost:3000`.
 
 ## Envoi des rendez-vous
 
-Le formulaire enregistre les demandes directement dans Firestore, collection `reservations`, sans API route ni backend Node/Express. Copier `.env.example` vers `.env.local`, puis renseigner les variables Firebase `VITE_FIREBASE_*`.
+Le formulaire enregistre les demandes directement dans Firestore, collection `reservations`. Après un enregistrement réussi, une API route Next.js légère appelle Brevo côté serveur pour envoyer l'e-mail de confirmation au client. Copier `.env.example` vers `.env.local`, puis renseigner les variables Firebase `VITE_FIREBASE_*` et les variables Brevo `BREVO_*`.
 
 Avant publication, compléter et faire valider l’identité légale, les coordonnées, l’hébergeur et les informations de confidentialité dans `components/footer.tsx`. Les informations non fournies ne sont pas inventées. Les visuels d’illustration ne constituent pas un portfolio ni un avant/après.
 
-Dans Vercel, ajouter ces variables dans `Project Settings` > `Environment Variables` pour `Production`, et aussi `Preview` si les branches de preview doivent envoyer de vraies demandes. Redéployer après ajout des variables.
+Dans Vercel, ajouter ces variables dans `Project Settings` > `Environment Variables` pour `Production`, et aussi `Preview` si les branches de preview doivent envoyer de vraies demandes. `BREVO_API_KEY`, `BREVO_SENDER_EMAIL` et `BREVO_SENDER_NAME` restent côté serveur et ne doivent jamais être exposées au navigateur. Redéployer après ajout des variables.
+
+Le flux d'envoi est volontairement tolérant : si Firestore enregistre la réservation mais que Brevo échoue, la demande reste validée côté site et une note indique que l'e-mail automatique n'a pas pu être envoyé. Les erreurs Brevo sont journalisées côté serveur.
 
 Publier les règles `firestore.rules` dans Firebase Console > Firestore Database > Rules. Elles autorisent uniquement la création de documents `reservations`, interdisent la lecture publique, la modification et la suppression. Pour une protection plus forte contre les abus, activer Firebase App Check sur le domaine de production.
 
@@ -97,6 +99,7 @@ Les captures sont dans `test-results/`. `TEST_URL` permet de tester un serveur e
 - `app/experience.css` : mise en scène et adaptations responsive.
 - `lib/appointments.ts` : validation du formulaire côté navigateur.
 - `lib/firebase.ts` et `lib/reservations.ts` : configuration Firebase et création Firestore.
+- `app/api/send-confirmation-email/route.ts` et `lib/confirmation-email.ts` : envoi Brevo côté serveur après réservation.
 - `firestore.rules` : règles minimales de création des réservations.
 - `next.config.ts` : CSP et autres headers de sécurité.
 

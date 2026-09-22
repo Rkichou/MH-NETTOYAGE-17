@@ -3,6 +3,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, ChevronLeft, Check, MapPin, Clock3, ShieldCheck } from "lucide-react";
 import { Appointment, emptyAppointment, Errors, parisToday, serviceNames, times, validateAppointment, vehicles } from "@/lib/appointments";
+import { sendConfirmationEmail } from "@/lib/confirmation-email";
 import { createReservation } from "@/lib/reservations";
 import { useSiteMotion } from "./motion-provider";
 import { Reveal } from "./reveal";
@@ -16,6 +17,7 @@ export function AppointmentForm() {
   const [errors, setErrors] = useState<Errors>({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [emailWarning, setEmailWarning] = useState(false);
   const [message, setMessage] = useState("");
   const form = useRef<HTMLFormElement>(null);
   const moved = useRef(false);
@@ -28,6 +30,7 @@ export function AppointmentForm() {
         setData((current) => ({ ...current, service: event.detail }));
         setStep(1);
         setSuccess(false);
+        setEmailWarning(false);
         setErrors({});
       }
     }) as EventListener;
@@ -54,6 +57,13 @@ export function AppointmentForm() {
     try {
       if (data.website || Date.now() - startedAt.current < 2500) throw new Error("L'envoi a échoué. Réessayez dans quelques instants.");
       await createReservation(data);
+      try {
+        await sendConfirmationEmail(data);
+        setEmailWarning(false);
+      } catch (emailError) {
+        console.error("Confirmation email failed.", emailError);
+        setEmailWarning(true);
+      }
       setSuccess(true); setData({ ...emptyAppointment }); startedAt.current = Date.now();
     } catch (err) { setMessage(err instanceof Error ? err.message : "L'envoi a échoué. Réessayez dans quelques instants."); }
     finally { setLoading(false); }
@@ -68,7 +78,7 @@ export function AppointmentForm() {
 
   return <section className="booking-section" id="rendez-vous"><div className="booking-intro"><Reveal><p className="overline">Prendre rendez-vous</p><h2>Votre véhicule mérite <em>le bon niveau de soin.</em></h2><p className="booking-lead">Quelques informations suffisent pour préparer votre rendez-vous.</p><div className="booking-facts"><div><MapPin /><span><strong>Secteur</strong>Charente-Maritime</span></div><div><Clock3 /><span><strong>Disponibilité</strong>Sur rendez-vous</span></div></div></Reveal></div>
     <form ref={form} className="step-form" onSubmit={submit} noValidate aria-busy={loading}>
-      {success ? <motion.div className="booking-success" role="status" initial={enabled ? { opacity: 0, y: 12 } : false} animate={{ opacity: 1, y: 0 }}><Check size={40} /><h3>Votre demande de rendez-vous a bien été envoyée.</h3><p>Nous vous recontacterons rapidement.</p><button type="button" className="form-next" onClick={() => { setSuccess(false); setStep(1); startedAt.current = Date.now(); }}>Nouvelle demande <ArrowRight /></button></motion.div> : <>
+      {success ? <motion.div className="booking-success" role="status" initial={enabled ? { opacity: 0, y: 12 } : false} animate={{ opacity: 1, y: 0 }}><Check size={40} /><h3>Votre demande de rendez-vous a bien été envoyée.</h3><p>{emailWarning ? "Votre demande est enregistrée. L'email de confirmation n'a pas pu être envoyé automatiquement, mais nous vous recontacterons rapidement." : "Un email de confirmation vient de vous être envoyé. Nous vous recontacterons rapidement."}</p><button type="button" className="form-next" onClick={() => { setSuccess(false); setEmailWarning(false); setStep(1); startedAt.current = Date.now(); }}>Nouvelle demande <ArrowRight /></button></motion.div> : <>
         <div className="step-progress"><div aria-hidden="true">{[1, 2, 3].map((n) => <span key={n} className={n <= step ? "active" : ""} />)}</div><p aria-live="polite">Étape {step} sur 3</p></div>
         <AnimatePresence mode="wait" initial={false} custom={direction}>
           <motion.div key={step} custom={direction} variants={variants} initial="enter" animate="center" exit="exit" transition={{ duration: enabled ? .25 : 0 }} className="form-step" onAnimationComplete={() => { if (moved.current) { form.current?.querySelector<HTMLElement>("h3")?.focus({ preventScroll: true }); moved.current = false; } }}>
