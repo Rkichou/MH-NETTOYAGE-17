@@ -172,7 +172,7 @@ html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="
   .spotlight-photo { aspect-ratio: 4/3; }
   .stack-inner { grid-template-columns: 1fr; }
   .stack-photo { min-height: 360px; }
-  .stack-panel { margin-bottom: 30px; }
+  .stack-panel { position: sticky; margin-bottom: 30px; }
   .footer-bottom { display: flex; flex-wrap: wrap; }
   .booking-section { grid-template-columns: 1fr; }
   .step-form { padding: 60px 32px; }

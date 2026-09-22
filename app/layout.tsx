@@ -4,6 +4,7 @@ import "./experience.css";
 import "./hero-editorial.css";
 import "./why-choose-us.css";
 import "./gallery.css";
+import "./form-select.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.SITE_URL || "http://localhost:3000"),

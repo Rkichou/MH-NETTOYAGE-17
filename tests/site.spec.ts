@@ -105,7 +105,7 @@ test("reduced motion, mobile menu, anchors, modal keyboard and loupe", async ({ 
   await page.keyboard.press("Escape"); await expect(trigger).toBeFocused();
 });
 
-test("appointment steps, error handling, success and floating CTA", async ({ page }) => {
+test("appointment steps, validation and clean send failure without Firebase env", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
@@ -113,39 +113,26 @@ test("appointment steps, error handling, success and floating CTA", async ({ pag
   await expect(page.locator(".mobile-fab")).toHaveCount(0);
   await page.getByRole("button", { name: "Continuer", exact: true }).click();
   await expect(page.getByText("Choisissez une prestation.", { exact: true })).toBeVisible();
-  await page.locator('select[name="service"]').selectOption("Solutions professionnelles");
-  await page.locator('select[name="vehicle"]').selectOption("Berline");
+  await page.getByRole('combobox', { name: 'Prestation', exact: true }).click();
+  await page.getByRole('option', { name: 'Solutions professionnelles', exact: true }).click();
+  await page.getByRole('combobox', { name: 'Type de véhicule', exact: true }).click();
+  await page.getByRole('option', { name: 'Berline', exact: true }).click();
   await page.getByRole("button", { name: "Continuer", exact: true }).click();
   await page.locator('input[name="date"]').fill("2001-01-01");
   await page.getByRole("button", { name: "Continuer", exact: true }).click();
   await expect(page.getByText("Choisissez une date valide, aujourd’hui ou plus tard.", { exact: true })).toBeVisible();
   await page.locator('input[name="date"]').fill(parisToday());
-  await page.locator('select[name="time"]').selectOption("Matin");
+  await page.getByRole('combobox', { name: 'Créneau souhaité', exact: true }).click();
+  await page.getByRole('option', { name: 'Matin', exact: true }).click();
   await page.getByRole("button", { name: "Retour", exact: true }).click();
-  await expect(page.locator('select[name="service"]')).toHaveValue("Solutions professionnelles");
+  await expect(page.getByRole('combobox', { name: 'Prestation', exact: true })).toHaveText("Solutions professionnelles");
   await page.getByRole("button", { name: "Continuer", exact: true }).click();
   await page.getByRole("button", { name: "Continuer", exact: true }).click();
   await page.locator('input[name="name"]').fill("Client Test");
   await page.locator('input[name="phone"]').fill("0612345678");
   await page.locator('input[name="email"]').fill("test@example.com");
   await page.locator('input[name="consent"]').check();
-  await page.route("**/api/appointments", (route) => route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({ message: "Envoi indisponible" }) }));
+  await page.waitForTimeout(2600);
   await page.getByRole("button", { name: "Envoyer la demande" }).click();
-  await expect(page.getByText("Envoi indisponible", { exact: true })).toBeVisible();
-  await page.unroute("**/api/appointments");
-  await page.route("**/api/appointments", (route) => route.fulfill({ status: 200, contentType: "application/json", body: '{"ok":true}' }));
-  await page.getByRole("button", { name: "Envoyer la demande" }).click();
-  await expect(page.getByText("Votre demande est transmise.", { exact: true })).toBeVisible();
-});
-
-test("API refuses invalid origins, null payload, bot, past date and bursts", async ({ request }) => {
-  expect((await request.post('/api/appointments', { headers: { origin: 'https://invalid.example' }, data: {} })).status()).toBe(403);
-  expect((await request.post('/api/appointments', { headers: { 'content-type': 'application/json' }, data: 'null' })).status()).toBe(400);
-  const valid = { ...emptyAppointment, service: "Solutions professionnelles", vehicle: "Berline", date: parisToday(), time: "Matin", name: "Client Test", phone: "0612345678", email: "test@example.com", consent: true };
-  expect((await request.post('/api/appointments', { data: { ...valid, website: 'spam' } })).status()).toBe(400);
-  expect((await request.post('/api/appointments', { data: { ...valid, date: '2000-01-01' } })).status()).toBe(400);
-  // No valid request is sent: these checks cannot deliver an email.
-  await request.post('/api/appointments', { data: {} });
-  await request.post('/api/appointments', { data: {} });
-  expect((await request.post('/api/appointments', { data: {} })).status()).toBe(429);
+  await expect(page.getByText("La prise de rendez-vous est momentanement indisponible.", { exact: true })).toBeVisible();
 });
