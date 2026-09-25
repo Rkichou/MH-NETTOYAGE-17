@@ -1,0 +1,57 @@
+.prestations { background: #080808; color: #fff; scroll-margin-top: 76px; }
+.prestations-heading { display: flex; align-items: center; justify-content: space-between; gap: 48px; margin-bottom: 60px; }
+.prestations-eyebrow { display: inline-flex; align-items: center; gap: 7px; margin: 0 0 20px; padding: 5px 10px; border: 1px solid #49463e; border-radius: 6px; color: var(--gold-light); font-size: 11px; }
+.prestations-heading h2 { font-size: 56px; line-height: 1.06; }
+.prestations-heading h2 em { color: var(--gold-light); }
+.prestations-intro { max-width: 370px; }
+.prestations-summary { margin: 0 0 22px; color: #c2c2bc; font-size: 15px; line-height: 1.75; }
+.prestations-book { display: inline-flex; align-items: center; gap: 20px; padding: 5px 5px 5px 18px; border: 1px solid var(--gold); border-radius: 28px; background: var(--gold-light); color: var(--ink); text-decoration: none; font-size: 12px; font-weight: 700; transition: background .25s; }
+.prestations-book span { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--ink); color: white; }
+.prestations-book:hover { background: #fff; }
+.prestations-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.prestation-reveal { min-width: 0; }
+.prestation-card { position: relative; height: 410px; border: 1px solid #363630; border-radius: 8px; background: #1c1c19; transition: border-color .25s, box-shadow .25s, transform .25s; }
+.prestation-photo { position: absolute; inset: 0; overflow: hidden; border-radius: 7px; }
+.prestation-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(0 0 0 / 12%) 25%, rgb(0 0 0 / 48%) 60%, rgb(0 0 0 / 94%) 100%); }
+.prestation-photo img { object-fit: cover; transition: transform .65s cubic-bezier(.2,.65,.3,1); }
+.prestation-content { position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 22px 18px; }
+.prestation-content h3 { margin: 0; font: 400 30px/1.08 Georgia, "Times New Roman", serif; padding-bottom: 0; transition: padding-bottom .3s; }
+.prestation-title { display: block; text-shadow: 0 2px 12px rgb(0 0 0 / 25%); }
+.prestation-title::before { content: ""; display: block; width: 28px; height: 1px; margin-bottom: 16px; background: var(--gold-light); }
+.prestation-title em { display: block; margin-top: 4px; color: var(--gold-light); font-weight: 400; }
+.prestation-content h3 a { color: white; text-decoration: none; }
+.prestation-content h3 a::after { content: ""; position: absolute; inset: 0; }
+.prestation-arrow { position: absolute; top: 16px; right: 14px; display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid rgb(255 255 255 / 55%); border-radius: 50%; background: rgb(0 0 0 / 25%); transition: background .25s, color .25s; }
+.prestation-content p { position: absolute; bottom: 20px; left: 18px; right: 18px; margin: 0; color: #e1e1dc; font-size: 13px; line-height: 1.65; opacity: 0; transform: translateY(8px); transition: opacity .3s, transform .3s; pointer-events: none; }
+.prestation-card:focus-within { outline: 2px solid var(--gold-light); outline-offset: 4px; }
+.prestation-card h3 a:focus-visible { outline: none; }
+.prestation-card:focus-within h3 { padding-bottom: 138px; }
+.prestation-card:focus-within p { opacity: 1; transform: none; }
+@media (hover: hover) and (pointer: fine) {
+  .prestation-card:hover { border-color: var(--gold-light); box-shadow: 0 12px 30px rgb(0 0 0 / 25%); transform: translateY(-4px); }
+  .prestation-card:hover img { transform: scale(1.045); }
+  .prestation-card:hover h3 { padding-bottom: 138px; }
+  .prestation-card:hover p { opacity: 1; transform: none; }
+  .prestation-card:hover .prestation-arrow { color: var(--ink); background: var(--gold-light); }
+}
+@media (min-width: 1001px) and (max-width: 1200px) {
+  .prestation-content h3 { font-size: 25px; }
+}
+@media (max-width: 1000px) {
+  .prestations-heading h2 { font-size: 48px; }
+  .prestations-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .prestation-card { height: 380px; }
+  .prestation-content h3, .prestation-card:focus-within h3, .prestation-card:hover h3 { padding-bottom: 108px; }
+  .prestation-content p { opacity: 1; transform: none; }
+}
+@media (max-width: 540px) {
+  .prestations { padding-top: 72px; padding-bottom: 72px; }
+  .prestations-heading { display: block; margin-bottom: 36px; }
+  .prestations-heading h2 { font-size: 42px; }
+  .prestations-intro { margin-top: 24px; }
+  .prestations-grid { grid-template-columns: minmax(0, 1fr); }
+}
+html[data-motion="off"] .prestations *, html[data-motion="off"] .prestation-card:hover img { transition: none; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .prestations *, .prestation-card:hover img { transition: none !important; transform: none !important; }
+}

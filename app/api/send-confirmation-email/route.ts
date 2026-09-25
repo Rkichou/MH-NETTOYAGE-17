@@ -52,9 +52,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: "Origine non autorisee." }, { status: 403 });
   }
 
-  const apiKey = process.env.BREVO_API_KEY;
-  const senderEmail = process.env.BREVO_SENDER_EMAIL;
-  const senderName = process.env.BREVO_SENDER_NAME || "MH Nettoyage 17";
+  const apiKey = process.env.BREVO_API_KEY?.trim();
+  const senderEmail = process.env.BREVO_SENDER_EMAIL?.trim();
+  const senderName = process.env.BREVO_SENDER_NAME?.trim() || "MH Nettoyage 17";
 
   if (!apiKey || !senderEmail) {
     console.error("Brevo configuration missing.");
