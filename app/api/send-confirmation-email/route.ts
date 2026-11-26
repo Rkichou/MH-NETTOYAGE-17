@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
   const apiKey = process.env.BREVO_API_KEY?.trim();
   const senderEmail = process.env.BREVO_SENDER_EMAIL?.trim();
   const senderName = process.env.BREVO_SENDER_NAME?.trim() || "MH Nettoyage 17";
+  const notificationEmail = process.env.APPOINTMENT_TO_EMAIL?.trim();
 
   if (!apiKey || !senderEmail) {
     console.error("Brevo configuration missing.");
@@ -125,7 +126,32 @@ export async function POST(request: NextRequest) {
       </div>
     </div>`;
 
-  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+  const adminText = "Nouvelle demande de rendez-vous\n\n" +
+    textLine("Client", name) + textLine("Email", email) +
+    textLine("Telephone", phone) + textLine("Service", service) +
+    textLine("Date souhaitee", date) + textLine("Heure souhaitee", time) +
+    textLine("Adresse", address || null) + textLine("Message", message || null) +
+    "Statut : demande en attente de confirmation\n";
+  let adminUrl = "";
+  try {
+    const configuredUrl = new URL(process.env.SITE_URL || "");
+    if (configuredUrl.protocol === "https:") adminUrl = new URL("/admin", configuredUrl.origin).href;
+  } catch { /* The summary remains available without an admin link. */ }
+  const adminHtml = `<div style="font-family:Arial,sans-serif;color:#1e1e1a;max-width:620px;margin:auto;padding:28px;border-top:4px solid #b3945b;">
+    <p style="color:#806735;font-weight:bold;">MH Nettoyage 17</p>
+    <h1 style="font-size:24px;">Nouvelle demande de rendez-vous</h1>
+    <table style="width:100%;border-collapse:collapse;">
+      ${htmlRow("Client", name)}${htmlRow("Email", email)}${htmlRow("Telephone", phone)}
+      ${htmlRow("Service", service)}${htmlRow("Date souhaitee", date)}${htmlRow("Heure souhaitee", time)}
+      ${htmlRow("Adresse", address || null)}${htmlRow("Message", message || null)}
+      ${htmlRow("Statut", "En attente de confirmation")}
+    </table>
+    ${adminUrl ? `<p><a href="${escapeHtml(adminUrl)}" style="color:#806735;">Consulter les demandes dans l'administration</a></p>` : ""}
+    <p>Repondez a cet email pour contacter le client et confirmer son rendez-vous.</p>
+  </div>`;
+
+  const deliver = async (content: Record<string, unknown>) => {
+    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: {
       accept: "application/json",
@@ -134,16 +160,24 @@ export async function POST(request: NextRequest) {
     },
     body: JSON.stringify({
       sender: { email: senderEmail, name: senderName },
-      to: [{ email, name }],
-      subject: "Confirmation de votre demande de rendez-vous",
-      textContent,
-      htmlContent,
+      ...content,
     }),
+    signal: AbortSignal.timeout(12000),
   });
+    if (!response.ok) throw new Error(`Brevo HTTP ${response.status}`);
+  };
 
-  if (!response.ok) {
-    const detail = await response.text().catch(() => "");
-    console.error("Brevo confirmation email failed.", response.status, detail);
+  const [confirmation, notification] = await Promise.allSettled([
+    deliver({ to: [{ email, name }], subject: "Confirmation de votre demande de rendez-vous", textContent, htmlContent }),
+    notificationEmail && emailPattern.test(notificationEmail)
+      ? deliver({ to: [{ email: notificationEmail }], replyTo: { email, name }, subject: "Nouvelle demande de rendez-vous - MH Nettoyage 17", textContent: adminText + (adminUrl ? `\nAdministration : ${adminUrl}\n` : ""), htmlContent: adminHtml })
+      : Promise.reject(new Error("APPOINTMENT_TO_EMAIL missing or invalid")),
+  ]);
+  if (notification.status === "rejected") {
+    console.error("Brevo admin notification failed.", notification.reason instanceof Error ? notification.reason.message : "Delivery failed");
+  }
+  if (confirmation.status === "rejected") {
+    console.error("Brevo confirmation email failed.", confirmation.reason instanceof Error ? confirmation.reason.message : "Delivery failed");
     return NextResponse.json({ message: "Email de confirmation indisponible." }, { status: 502 });
   }
 
