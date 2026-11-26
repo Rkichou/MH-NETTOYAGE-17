@@ -6,3 +6,6 @@ npm-debug.log*
 *.tsbuildinfo
 test-results/
 playwright-report/
+firebase-debug.log
+firestore-debug.log
+admin-dev*.log
